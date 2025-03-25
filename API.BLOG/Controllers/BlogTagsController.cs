@@ -39,7 +39,24 @@ namespace API.BLOG.Controllers
         }
 
         // POST: api/BlogTags
-        public async Task<IActionResult> Post([FromBody] BlogTagCreateRequest request)
+        //public async Task<IActionResult> Post([FromBody] BlogTagCreateRequest request)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        var response = await _mediator.Send(request);
+        //        if (response.Success)
+        //        {
+        //            return Ok(response);
+        //        }
+        //        ModelState.AddModelError("Error", response.Message);   
+        //    }
+
+        //    return BadRequest(ModelState);
+        //}
+
+        // PUT: api/BlogTags
+        [HttpPut]
+        public async Task<IActionResult> Put(BlogTagUpdateRequest request)
         {
             if (ModelState.IsValid)
             {
@@ -48,10 +65,22 @@ namespace API.BLOG.Controllers
                 {
                     return Ok(response);
                 }
-                ModelState.AddModelError("Error", response.Message);   
+                ModelState.AddModelError("Error", response.Message);
             }
 
             return BadRequest(ModelState);
+        }
+
+        // DELETE: api/BlogTags/3
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var response = await _mediator.Send(new BlogTagDeleteRequest { Id = id });
+            if (response.Success)
+            {
+                return Ok(response);
+            }
+            return BadRequest(response);
         }
     }
 }
