@@ -33,7 +33,12 @@ namespace APP.BLOG.Features.Skills
             if (entity is null)
                 return Error("Skill not found!");
 
-            entity.Name = request.Name.Trim();
+            if (await _db.Skills.AnyAsync(s => s.Name.ToUpper() == request.Name.ToUpper().Trim(), cancellationToken))
+            {
+                return Error("A skill with the same name already exists.");
+            }
+
+                entity.Name = request.Name.Trim();
             entity.UserIds = request.UserIds;
 
             _db.Skills.Update(entity);

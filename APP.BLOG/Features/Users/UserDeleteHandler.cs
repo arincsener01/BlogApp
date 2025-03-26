@@ -25,6 +25,11 @@ namespace APP.BLOG.Features.Users
             if (entity is null)
                 return Error("User not found!");
 
+            if (entity.UserSkills.Any())
+            {
+                return Error("User cannot be deleted because it has relational User Skills!");
+            }
+
             _db.Users.Remove(entity);
             await _db.SaveChangesAsync(cancellationToken);
 

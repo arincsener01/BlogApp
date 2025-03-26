@@ -26,6 +26,11 @@ namespace APP.BLOG.Features.Tags
             if (entity is null)
                 return Error("Tag not found!");
 
+            if (entity.BlogTags.Any())
+            {
+                return Error("Tag cannot be deleted because it has relational Blog Tags!");
+            }
+
             _db.Tags.Remove(entity);
             await _db.SaveChangesAsync(cancellationToken);
 

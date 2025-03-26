@@ -21,6 +21,9 @@ namespace APP.BLOG.Features.Roles
             if (entity is null)
                 return Error("Role not found!");
 
+            if (entity.Users.Any())
+                return Error("Role cannot be deleted because it has relational users!");
+
             _db.Roles.Remove(entity);
             await _db.SaveChangesAsync(cancellationToken);
 

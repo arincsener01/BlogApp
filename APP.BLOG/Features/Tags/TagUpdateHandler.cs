@@ -33,6 +33,11 @@ namespace APP.BLOG.Features.Tags
             if (entity is null)
                 return Error("Tag not found!");
 
+            if (await _db.Tags.AnyAsync(t => t.Name.ToUpper() == request.Name.ToUpper().Trim(), cancellationToken))
+            {
+                return Error("A tag with the same name already exists.");
+            }
+
             entity.Name = request.Name.Trim();
             entity.BlogIds = request.BlogIds;
 

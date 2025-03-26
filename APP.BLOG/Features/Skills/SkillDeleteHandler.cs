@@ -26,6 +26,11 @@ namespace APP.BLOG.Features.Skills
             if (entity is null)
                 return Error("Skill not found!");
 
+            if (entity.UserSkills.Any())
+            {
+                return Error("Skill cannot be deleted because it has relational User Skills!");
+            }
+
             _db.Skills.Remove(entity);
             await _db.SaveChangesAsync(cancellationToken);  
 

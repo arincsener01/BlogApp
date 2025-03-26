@@ -30,11 +30,6 @@ namespace APP.BLOG.Features.Roles
         public async Task<CommandResponse> Handle(RoleUpdateRequest request, CancellationToken cancellationToken)
         {
             //Way 1:
-            // Optional: Check for duplicate role with same name
-            //if (await _db.Roles.AnyAsync(r => r.Name.ToUpper() == request.Name.ToUpper().Trim() && r.Id != request.Id, cancellationToken))
-            //{
-            //    return Error("A role with the same name and ID already exists.");
-            //}
             //var entity = new Role
             //{
             //    Name = request.Name.Trim(),
@@ -43,6 +38,11 @@ namespace APP.BLOG.Features.Roles
 
             //Way 2:
             //var entity = await _db.Roles.FindAsync(request.Id, cancellationToken);
+
+            if (await _db.Roles.AnyAsync(r => r.Name.ToUpper() == request.Name.ToUpper().Trim() && r.Id != request.Id, cancellationToken))
+            {
+                return Error("A role with the same name and ID already exists.");
+            }
 
             //Way 3:
             var entity = await _db.Roles.SingleOrDefaultAsync(r => r.Id == request.Id, cancellationToken);
