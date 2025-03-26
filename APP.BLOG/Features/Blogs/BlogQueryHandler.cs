@@ -1,4 +1,5 @@
 ﻿using APP.BLOG.Domain;
+using APP.BLOG.Features.Users;
 using CORE.APP.Features;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -29,6 +30,8 @@ namespace APP.BLOG.Features.Blogs
 
         public List<int> TagIds { get; set; }
         public string TagNames { get; set; }
+
+        public UserQueryResponse User { get; set; }
     }
 
     public class BlogQueryHandler : BlogDbHandler, IRequestHandler<BlogQueryRequest, IQueryable<BlogQueryResponse>>
@@ -70,7 +73,17 @@ namespace APP.BLOG.Features.Blogs
                 UserId = b.UserId,
                 UserFullName = b.User.Name + " " + b.User.Surname,
                 TagIds = b.BlogTags.Select(bt => bt.TagId).ToList(),
-                TagNames = string.Join(", ", b.BlogTags.Select(bt => bt.Tag.Name))
+                TagNames = string.Join(", ", b.BlogTags.Select(bt => bt.Tag.Name)),
+
+                User = b.User == null ? null : new UserQueryResponse()
+                {
+                    Name = b.User.Name,
+                    UserName = b.User.UserName
+                    //RegistrationDate = b.User.RegistrationDate,
+                    //IsActive = b.User.IsActive,
+                    //RoleId = b.User.RoleId,
+                    //Surname = b.User.Surname,
+                }
             });
 
             return Task.FromResult(query);

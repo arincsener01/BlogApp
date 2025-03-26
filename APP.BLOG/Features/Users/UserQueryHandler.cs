@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using APP.BLOG.Domain;
+using APP.BLOG.Features.Roles;
+using APP.BLOG.Features.Skills;
 using CORE.APP.Features;
 using MediatR;
 
@@ -33,6 +35,8 @@ namespace APP.BLOG.Features.Users
         public int RoleId { get; set; }
 
         public List<int> SkillIds { get; set; }
+
+        public RoleQueryResponse Role { get; set; }
     }
     public class UserQueryHandler : BlogDbHandler, IRequestHandler<UserQueryRequest, IQueryable<UserQueryResponse>>
     {
@@ -53,7 +57,13 @@ namespace APP.BLOG.Features.Users
                     Surname = u.Surname,
                     RegistrationDate = u.RegistrationDate,
                     RoleId = u.RoleId,
-                    SkillIds = u.SkillIds
+                    SkillIds = u.SkillIds,
+
+                    Role = u.Role == null ? null : new RoleQueryResponse()
+                    {
+                        Name = u.Role.Name,
+                        Id = u.Role.Id
+                    }
                 });
             
             return Task.FromResult(query);
