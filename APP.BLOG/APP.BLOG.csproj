@@ -16,4 +16,10 @@
     <ProjectReference Include="..\CORE\CORE.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Features\Skills\" />
+    <Folder Include="Features\Roles\" />
+    <Folder Include="Features\Users\" />
+  </ItemGroup>
+
 </Project>
