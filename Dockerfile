@@ -2,17 +2,17 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /app  # Set the working directory in the container
 
-# Copy the .csproj file from the correct path to the /app directory
-COPY BlogApp.AppHost/*.csproj ./  # Ensure this points to the correct location of your .csproj file
+# Copy the .csproj file from BlogApp/BlogApp.AppHost to the container
+COPY BlogApp.AppHost/BlogApp.AppHost.csproj ./  # Ensure this points to the correct location of your .csproj file
 
-# Now, change the working directory to the `BlogApp.AppHost` folder to handle the build
-WORKDIR /app/BlogApp.AppHost
+# Set the working directory inside the container to where the .csproj file is located
+WORKDIR /app
 
 # Restore dependencies
-RUN dotnet restore
+RUN dotnet restore BlogApp.AppHost.csproj
 
-# Copy all project files from the current directory into the container
-COPY BlogApp.AppHost/. ./  # Copy all files from BlogApp.AppHost to the current directory in the container
+# Copy all project files from BlogApp/BlogApp.AppHost to the container
+COPY BlogApp.AppHost/. ./  # This will copy the rest of the project files into the current directory in the container
 
 # Publish the application
 RUN dotnet publish -c Release -o /out
