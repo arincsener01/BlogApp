@@ -10,6 +10,9 @@ COPY ["CORE/CORE.csproj", "CORE/"]
 COPY ["BlogApp.ServiceDefaults/BlogApp.ServiceDefaults.csproj", "BlogApp.ServiceDefaults/"]
 COPY ["BlogApp.AppHost/BlogApp.AppHost.csproj", "BlogApp.AppHost/"]
 
+# Aspire workload'ını yükle
+RUN dotnet workload install aspire
+
 # Bağımlılıkları geri yükle
 RUN dotnet restore
 
