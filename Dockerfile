@@ -1,29 +1,27 @@
-# 1. Build Stage
+# Build aşaması
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-WORKDIR /app  # Set the working directory in the container
+WORKDIR /src
 
-# Copy the .csproj file from BlogApp/BlogApp.AppHost to the container
-COPY BlogApp.AppHost/BlogApp.AppHost.csproj ./  # Ensure this points to the correct location of your .csproj file
+# Solution ve proje dosyalarını kopyala
+COPY ["BlogApp.sln", "./"]
+COPY ["API.BLOG/API.BLOG.csproj", "API.BLOG/"]
+COPY ["APP.BLOG/APP.BLOG.csproj", "APP.BLOG/"]
+COPY ["CORE/CORE.csproj", "CORE/"]
+COPY ["BlogApp.ServiceDefaults/BlogApp.ServiceDefaults.csproj", "BlogApp.ServiceDefaults/"]
+COPY ["BlogApp.AppHost/BlogApp.AppHost.csproj", "BlogApp.AppHost/"]
 
-# Set the working directory inside the container to where the .csproj file is located
+# Bağımlılıkları geri yükle
+RUN dotnet restore
+
+# Tüm kaynak kodları kopyala
+COPY . .
+
+# Uygulamayı derle ve yayınla
+RUN dotnet build -c Release -o /app/build
+RUN dotnet publish -c Release -o /app/publish
+
+# Runtime aşaması
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
 WORKDIR /app
-
-# Restore dependencies
-RUN dotnet restore BlogApp.AppHost.csproj
-
-# Copy all project files from BlogApp/BlogApp.AppHost to the container
-COPY BlogApp.AppHost/. ./  # This will copy the rest of the project files into the current directory in the container
-
-# Publish the application
-RUN dotnet publish -c Release -o /out
-
-# 2. Runtime Stage
-FROM mcr.microsoft.com/dotnet/aspnet:8.0
-WORKDIR /app
-COPY --from=build /out ./
-
-# Expose the port the app will run on
-EXPOSE 7042
-
-# Start the app
-ENTRYPOINT ["dotnet", "BlogApp.AppHost.dll"]
+COPY --from=build /app/publish .
+ENTRYPOINT ["dotnet", "API.BLOG.dll"] 
