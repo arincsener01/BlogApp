@@ -1,13 +1,13 @@
 # 1. Build Stage
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-WORKDIR /app
+WORKDIR /app  # This sets the working directory inside the container
 
 # Copy the .csproj file and restore dependencies
-COPY *.csproj ./
+COPY BlogApp.AppHost/*.csproj ./  # Make sure this points to the correct directory for your csproj file
 RUN dotnet restore
 
 # Copy the entire project and publish the app
-COPY . ./
+COPY . ./  # Copy all project files
 RUN dotnet publish -c Release -o /out
 
 # 2. Runtime Stage
