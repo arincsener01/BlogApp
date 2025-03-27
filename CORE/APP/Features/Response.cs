@@ -8,8 +8,8 @@ namespace CORE.APP.Features
         public string Message { get; }
         public CommandResponse(bool isSuccessful, string message = "", int id = 0) : base(id)
         {
-            isSuccessful = isSuccessful;
-            message = message;
+            Success = isSuccessful;
+            Message = message;
         }
     }
     public class QueryResponse : Entity
